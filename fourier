@@ -1,0 +1,53 @@
+figure;
+hold on;
+grid on;
+
+base = [0; 0; 0];
+
+l1 = 2;
+l2 = 4;
+l3 = 3;
+
+% Itera a través de las iteraciones de la simulación
+for iter = 1:length(out.q1)
+    % Obtenemos qs de la simulación
+    q1 = out.q1(iter);
+    q2 = out.q2(iter);
+    q3 = out.q3(iter);
+
+    % Calculamos las posiciones de las articulaciones en el espacio cartesiano
+    % son las traslaciones desde 0
+    x1 = [0; 0; l1];  % Articulación 1
+    x2 = [-l2*sin(q1)*sin(q2); l2*cos(q1)*sin(q2); l1 + l2*cos(q2)];  % Articulación 2
+    x3 = [l3*(cos(q1)*sin(q3)-sin(q1)*sin(q2)*cos(q3))-l2*sin(q1)*sin(q2); 
+          l3*(sin(q1)*sin(q3)+cos(q1)*sin(q2)*cos(q3))+l2*cos(q1)*sin(q2);
+          l3*cos(q2)*cos(q3)+l2*cos(q2)+l1 ];  % Articulación 3
+    %clf para borrar la figura anterior para actualizar la animación
+    clf;
+    
+    % dibujamos las articulaciones como puntos
+    plot3(base(1), base(2), base(3), 'ro', 'MarkerSize', 10);  % Base en rojo
+    hold on;
+    plot3(x1(1), x1(2), x1(3), 'go', 'MarkerSize', 10);  % Articulación 1 
+    plot3(x2(1), x2(2), x2(3), 'go', 'MarkerSize', 10);  % Articulación 2 
+    plot3(x3(1), x3(2), x3(3), 'go', 'MarkerSize', 10);  % Articulación 3
+    plot3(3, 4, 2, 'bo', 'MarkerSize', 10);  %Deseada
+    % dibujamos las líneas entre las articulaciones
+    line([base(1), x1(1), x2(1), x3(1)], ...
+         [base(2), x1(2), x2(2), x3(2)], ...
+         [base(3), x1(3), x2(3), x3(3)], 'Color', 'b', 'LineWidth', 2);
+   
+    xlim([-6, 6]);
+    ylim([-6, 6]);
+    zlim([-2, 6]);
+  
+    xlabel('X (m)');
+    ylabel('Y (m)');  
+    zlabel('Z (m)');
+    title('Animación 3D del Brazo Manipulador');
+    
+    view(3);
+    grid("minor");
+    % Pausa para crear una animación suave
+    pause(0.3);
+end
